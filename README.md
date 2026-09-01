@@ -183,7 +183,7 @@ npm run build   # 编译 src/mcp-server.ts → dist/mcp-server.js
   "mcpServers": {
     "code-i18n": {
       "command": "npx",
-      "args": ["-y", "code-i18n-agent", "mcp"]
+      "args": ["-y", "code-i18n-agent@latest", "mcp"]
     }
   }
 }
@@ -196,7 +196,7 @@ npm run build   # 编译 src/mcp-server.ts → dist/mcp-server.js
   "mcpServers": {
     "code-i18n": {
       "command": "node",
-      "args": ["D:/ZCodeData/testAgent/dist/mcp-server.js"]
+      "args": ["D:/ZCodeData/code-i18n/dist/mcp-server.js"]
     }
   }
 }
