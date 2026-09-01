@@ -1,0 +1,39 @@
+{
+  "project": "fixtures/erp-demo",
+  "src": [
+    "src"
+  ],
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/locales/**",
+    "**/.i18n-agent/**",
+    "**/*.orig"
+  ],
+  "extensions": [
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".vue",
+    ".html"
+  ],
+  "locales": {
+    "dir": "src/locales",
+    "default": "zh-CN",
+    "targets": [
+      "en-US"
+    ]
+  },
+  "keyStyle": "semantic",
+  "translationFn": "t",
+  "importStatement": "import { useI18n } from 'vue-i18n'",
+  "autoImport": true,
+  "backup": true,
+  "dryRun": false,
+  "glossary": [
+    "银河 ERP=Galaxy ERP",
+    "销售订单=Sales Order"
+  ],
+  "logLevel": "info"
+}

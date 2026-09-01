@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.npm-cache/
+output/
+*.log
+fixtures/erp-demo/.i18n-agent/
+fixtures/erp-demo/src/locales/
+
+# 本地截图/临时文件
+otp-*.png
+*.png
+.npmrc
