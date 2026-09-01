@@ -20,6 +20,7 @@ export function defaultConfig(project: string): I18nAgentConfig {
     keyStyle: "semantic",
     translationFn: "t",
     importStatement: "import { useI18n } from 'vue-i18n';",
+    initStatement: "const { t } = useI18n();",
     autoImport: true,
     backup: true,
     dryRun: false,

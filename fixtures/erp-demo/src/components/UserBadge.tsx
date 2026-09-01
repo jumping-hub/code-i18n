@@ -1,4 +1,3 @@
-import { useI18n } from 'vue-i18n'
 /**
  * JSX 组件：演示 JSX 文本与属性提取
  */
@@ -13,16 +12,16 @@ interface Props {
 export const UserBadge = defineComponent({
   props: {
     name: { type: String, required: true },
-    role: { type: String, default: t('src.components.UserBadge.普通用户.ae8ab1') },
+    role: { type: String, default: '普通用户' },
     online: { type: Boolean, default: false },
   },
   setup(props: Props) {
     return () => (
       <div class="user-badge">
-        <span class="badge-name" title={t('src.components.UserBadge.用户名称.1cd431')}>{props.name}</span>
+        <span class="badge-name" title="用户名称">{props.name}</span>
         <span class="badge-role">{props.role}</span>
         <span class={"badge-status " + (props.online ? 'online' : 'offline')}>
-          {props.online ? t('src.components.UserBadge.在线.01be7f') : t('src.components.UserBadge.离线.c1e38c')}
+          {props.online ? '在线' : '离线'}
         </span>
       </div>
     );

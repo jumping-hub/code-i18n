@@ -1,35 +1,34 @@
 <template>
   <div class="dashboard">
-    <h1>{{ t('src.App.工作台.7e87d1') }}</h1>
+    <h1>工作台</h1>
     <div class="stat-cards">
       <div class="card">
         <div class="card-value">{{ stats.todayOrders }}</div>
-        <div class="card-label">{{ t('src.views.DashboardView.今日订单数.169d56') }}</div>
+        <div class="card-label">今日订单数</div>
       </div>
       <div class="card">
         <div class="card-value">{{ stats.todaySales }}</div>
-        <div class="card-label">{{ t('src.views.DashboardView.今日销售额.c8f893') }}</div>
+        <div class="card-label">今日销售额</div>
       </div>
       <div class="card">
         <div class="card-value">{{ stats.pendingApprovals }}</div>
-        <div class="card-label">{{ t('src.views.DashboardView.待审核订单.3dc86a') }}</div>
+        <div class="card-label">待审核订单</div>
       </div>
       <div class="card">
         <div class="card-value">{{ stats.lowStock }}</div>
-        <div class="card-label">{{ t('src.views.DashboardView.库存预警.4d1e95') }}</div>
+        <div class="card-label">库存预警</div>
       </div>
     </div>
     <div class="greeting">
-      {{ t('src.views.DashboardView.早上好use.f53cd1', { userName: userName, today: today }) }}
+      早上好，{{ userName }}！今天是{{ today }}，祝您工作顺利。
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 
-const userName = ref(t('src.views.DashboardView.张三.23fc39'))
+const userName = ref('张三')
 const today = new Date().toLocaleDateString('zh-CN')
 
 const stats = ref({

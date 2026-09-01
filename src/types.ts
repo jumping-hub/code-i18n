@@ -100,6 +100,7 @@ export interface I18nAgentConfig {
   keyStyle: "semantic" | "hash";
   translationFn: string;
   importStatement?: string;
+  initStatement?: string;
   autoImport: boolean;
   backup: boolean;
   dryRun: boolean;

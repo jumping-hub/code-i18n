@@ -1,20 +1,20 @@
 <template>
   <div class="inventory">
-    <h1>{{ t('src.App.库存管理.e75627') }}</h1>
+    <h1>库存管理</h1>
     <div class="toolbar">
-      <input :placeholder="t('src.views.InventoryView.输入物料编码.416be7')" />
-      <button>{{ t('src.views.InventoryView.查询.999ddd') }}</button>
-      <button>{{ t('src.views.InventoryView.盘点.589f59') }}</button>
+      <input placeholder="输入物料编码或名称" />
+      <button>查询</button>
+      <button>盘点</button>
     </div>
     <table>
       <thead>
         <tr>
-          <th>{{ t('src.views.InventoryView.物料编码.810839') }}</th>
-          <th>{{ t('src.views.InventoryView.物料名称.24a46d') }}</th>
-          <th>{{ t('src.views.InventoryView.仓库.2a415c') }}</th>
-          <th>{{ t('src.views.InventoryView.当前库存.2ef9c7') }}</th>
-          <th>{{ t('src.views.InventoryView.安全库存.4e6ee3') }}</th>
-          <th>{{ t('src.views.InventoryView.库存数据加载.05ba26') }}</th>
+          <th>物料编码</th>
+          <th>物料名称</th>
+          <th>仓库</th>
+          <th>当前库存</th>
+          <th>安全库存</th>
+          <th>库存状态</th>
         </tr>
       </thead>
       <tbody>
@@ -25,8 +25,8 @@
           <td>{{ item.qty }}</td>
           <td>{{ item.safeQty }}</td>
           <td>
-            <span v-if="item.qty <= item.safeQty" class="low">{{ t('src.views.InventoryView.库存不足.7cdf33') }}</span>
-            <span v-else class="ok">{{ t('src.views.InventoryView.库存正常.5ae697') }}</span>
+            <span v-if="item.qty <= item.safeQty" class="low">库存不足</span>
+            <span v-else class="ok">库存正常</span>
           </td>
         </tr>
       </tbody>
@@ -36,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
@@ -49,8 +48,8 @@ onMounted(async () => {
     if (!resp.ok) throw new Error('HTTP ' + resp.status)
     items.value = await resp.json()
   } catch (e) {
-    warning.value = t('src.views.InventoryView.库存数据加载.05ba26')
-    ElMessage.error(t('src.views.InventoryView.网络异常请检.9ecc9a'))
+    warning.value = '库存数据加载失败，请稍后重试'
+    ElMessage.error('网络异常，请检查服务是否可用')
   }
 })
 

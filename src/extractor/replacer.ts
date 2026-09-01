@@ -99,29 +99,36 @@ export function planFileReplacements(
     content = content.slice(0, p.start) + p.text + content.slice(p.end);
   }
 
-  // import 注入判断：检查替换前源码是否已引用翻译函数（避免重复注入）
+  // import / init 注入判断：检查替换前源码是否已引用翻译函数（避免重复注入）
   let injectImport = false;
-  if (cfg.autoImport && cfg.importStatement && plans.length > 0) {
+  let injectInit = false;
+  if (cfg.autoImport && plans.length > 0) {
     const fnRe = new RegExp('\\b' + escapeRegExp(cfg.translationFn) + '\\b');
-    if (!fnRe.test(source)) injectImport = true;
+    if (cfg.importStatement && !fnRe.test(source)) injectImport = true;
+    if (cfg.initStatement && !normalize(source).includes(normalize(cfg.initStatement))) injectInit = true;
   }
-  let importText = '';
-  if (injectImport) {
-    importText = cfg.importStatement || '';
+  if (injectImport || injectInit) {
+    let inject = '';
+    if (injectImport) inject += cfg.importStatement + '\n';
+    if (injectInit) inject += cfg.initStatement + '\n';
     const rel = cands[0]?.relFile || '';
     if (rel.endsWith('.vue')) {
       const scriptOpen = /<script[^>]*>/.exec(content);
       if (scriptOpen) {
         const at = scriptOpen.index + scriptOpen[0].length;
-        content = content.slice(0, at) + '\n' + importText + content.slice(at);
+        content = content.slice(0, at) + '\n' + inject + content.slice(at);
       }
     } else {
       // 去掉 BOM 后插入到文件开头
       const bom = content.charCodeAt(0) === 0xfeff ? 1 : 0;
-      content = content.slice(0, bom) + importText + '\n' + content.slice(bom);
+      content = content.slice(0, bom) + inject + content.slice(bom);
     }
   }
-  return { content, replacements: plans, injectImport, importText };
+  return { content, replacements: plans, injectImport, importText: cfg.importStatement || '' };
+}
+
+function normalize(s: string): string {
+  return s.replace(/\s+/g, ' ').trim();
 }
 
 function escapeRegExp(s: string): string {

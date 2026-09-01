@@ -1,4 +1,3 @@
-import { useI18n } from 'vue-i18n'
 /**
  * 订单 API：包含大量不应国际化的内容（路径、日志、错误码）
  */
@@ -20,7 +19,7 @@ export async function fetchOrders(params: { page: number; size: number }): Promi
   const resp = await fetch(`${API_BASE}/orders?page=${params.page}&size=${params.size}`)
   if (!resp.ok) {
     // 用户可见错误（应保留）
-    throw new Error(t('src.api.orderApi.订单列表加载.28f315'))
+    throw new Error('订单列表加载失败，请稍后重试')
   }
   const data = await resp.json()
   return data
@@ -36,7 +35,7 @@ export async function submitOrder(order: Omit<Order, 'id' | 'createdAt' | 'statu
     await fetch(`${API_BASE}/orders`, { method: 'POST', body })
   } catch (e) {
     console.error('submitOrder failed:', e)
-    throw new Error(t('src.api.orderApi.订单提交失败.087b8f'))
+    throw new Error('订单提交失败，请检查网络连接')
   }
 }
 
