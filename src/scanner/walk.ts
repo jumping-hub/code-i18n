@@ -34,6 +34,7 @@ export function globToRegExp(glob: string): RegExp {
 export interface WalkOptions {
   extensions: string[];
   ignore: string[];
+  src: string[];
 }
 
 /** 收集项目内所有需要扫描的源码文件（返回正斜杠相对路径列表） */
@@ -78,8 +79,10 @@ export function walkSourceFiles(rootDir: string, opts: WalkOptions): string[] {
     }
   }
 
-  for (const sub of opts.extensions.length ? [rootDir] : []) {
-    walk(sub);
+  const srcDirs = opts.src && opts.src.length > 0 ? opts.src : ['.'];
+  for (const sub of srcDirs) {
+    const abs = path.isAbsolute(sub) ? sub : path.join(rootDir, sub);
+    walk(abs);
   }
   return out;
 }

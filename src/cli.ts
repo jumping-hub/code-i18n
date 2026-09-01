@@ -122,7 +122,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const rest = cmd === args[0] && cmd !== 'run' ? args.slice(1) : args;
+  const rest = cmd === args[0] ? args.slice(1) : args;
   const opts = parseArgs(rest);
 
   const overrides: Partial<I18nAgentConfig> & Record<string, unknown> = {};

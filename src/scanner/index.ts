@@ -81,7 +81,7 @@ export function scanProject(
   projectRoot: string,
   opts: { extensions: string[]; ignore: string[]; src: string[] }
 ): ScanResult {
-  const relFiles = walkSourceFiles(projectRoot, { extensions: opts.extensions, ignore: opts.ignore });
+  const relFiles = walkSourceFiles(projectRoot, { extensions: opts.extensions, ignore: opts.ignore, src: opts.src });
   const files: ScanResult['files'] = [];
   let total = 0;
   for (const rel of relFiles) {
