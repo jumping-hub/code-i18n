@@ -18,7 +18,7 @@ import { walkSourceFiles } from './walk';
 export function extractFileCandidates(absFile: string, relFile: string, source: string): StringCandidate[] {
   const ext = path.extname(absFile).toLowerCase();
   if (ext === '.vue') {
-    const { script, scriptStart, template } = splitVueSfc(source);
+    const { script, scriptStart, template, templateStart } = splitVueSfc(source);
     const out: StringCandidate[] = [];
     if (script !== null && script.trim().length > 0) {
       const tsCands = extractTsCandidates(absFile, relFile, script, ts.ScriptKind.TS);
@@ -36,14 +36,13 @@ export function extractFileCandidates(absFile: string, relFile: string, source: 
     }
     if (template !== null) {
       const tCands = extractTemplateCandidates(absFile, relFile, template, true);
-      const tStart = source.indexOf(template);
       for (const c of tCands) {
-        c.start += tStart;
-        c.end += tStart;
+        c.start += templateStart;
+        c.end += templateStart;
         // 属性替换的额外偏移也要映射回文件坐标
         const extra = c as StringCandidate & { attrStart?: number; attrValueEnd?: number };
-        if (extra.attrStart !== undefined) extra.attrStart += tStart;
-        if (extra.attrValueEnd !== undefined) extra.attrValueEnd += tStart;
+        if (extra.attrStart !== undefined) extra.attrStart += templateStart;
+        if (extra.attrValueEnd !== undefined) extra.attrValueEnd += templateStart;
         const prefix = source.slice(0, c.start);
         const lc = lineCol(prefix);
         c.line = lc.line;

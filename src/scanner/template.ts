@@ -307,12 +307,41 @@ export function extractTemplateCandidates(
  * 从 Vue SFC 提取：script 部分用 TS AST，template 部分用模板提取器。
  * 返回 { candidates, scriptText, scriptStart }
  */
-export function splitVueSfc(source: string): { script: string | null; scriptStart: number; template: string | null } {
+export function splitVueSfc(source: string): { script: string | null; scriptStart: number; template: string | null; templateStart: number } {
   const scriptM = /<script[^>]*>([\s\S]*?)<\/script>/i.exec(source);
-  const templateM = /<template[^>]*>([\s\S]*?)<\/template>/i.exec(source);
+  const tpl = extractTopLevelTemplate(source);
   return {
     script: scriptM ? scriptM[1] : null,
     scriptStart: scriptM ? scriptM.index + scriptM[0].indexOf(scriptM[1]) : -1,
-    template: templateM ? templateM[1] : null,
+    template: tpl ? tpl.content : null,
+    templateStart: tpl ? tpl.start : -1,
   };
+}
+
+/** 提取 SFC 顶层 <template>（跳过具名插槽 <template #xxx>，正确处理嵌套） */
+function extractTopLevelTemplate(source: string): { content: string; start: number; end: number } | null {
+  const openRe = /<template(\s[^>]*)?>/gi;
+  let m: RegExpExecArray | null;
+  while ((m = openRe.exec(source))) {
+    const attrs = m[1] || '';
+    // 跳过具名插槽 <template #xxx> / <template v-slot:xxx>
+    if (/#\w|v-slot/.test(attrs)) continue;
+    const contentStart = m.index + m[0].length;
+    let depth = 1;
+    const tagRe = /<\/?template(\s[^>]*)?>/gi;
+    tagRe.lastIndex = contentStart;
+    let tm: RegExpExecArray | null;
+    while ((tm = tagRe.exec(source))) {
+      if (tm[0].startsWith('</')) {
+        depth--;
+        if (depth === 0) {
+          return { content: source.slice(contentStart, tm.index), start: m.index, end: tm.index + tm[0].length };
+        }
+      } else {
+        depth++;
+      }
+    }
+    return null;
+  }
+  return null;
 }
