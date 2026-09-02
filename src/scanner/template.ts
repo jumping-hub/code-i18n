@@ -335,7 +335,7 @@ function extractTopLevelTemplate(source: string): { content: string; start: numb
       if (tm[0].startsWith('</')) {
         depth--;
         if (depth === 0) {
-          return { content: source.slice(contentStart, tm.index), start: m.index, end: tm.index + tm[0].length };
+          return { content: source.slice(contentStart, tm.index), start: contentStart, end: tm.index + tm[0].length };
         }
       } else {
         depth++;
