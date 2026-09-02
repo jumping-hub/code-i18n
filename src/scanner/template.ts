@@ -75,15 +75,29 @@ export function extractTemplateCandidates(
     return false;
   };
 
-  /** 解析标签开始 <tag ...>，返回标签名与结束位置；失败返回 -1 */
+  /** 解析标签开始 <tag ...>，返回标签名与结束位置；失败返回 null */
   function parseTagStart(): { tag: string; end: number; selfClose: boolean } | null {
-    const m = /^<([a-zA-Z][\w:-]*)([\s\S]*?)(\/?>)/.exec(source.slice(i));
-    if (!m) return null;
-    const tag = m[1].toLowerCase();
-    const attrsPart = m[2];
-    const endTag = m[0].length;
-    const selfClose = /\/>\s*$/.test(m[0]);
-    return { tag, end: i + endTag, selfClose };
+    if (source[i] !== '<') return null;
+    const nameM = /^<([a-zA-Z][\w:-]*)/.exec(source.slice(i));
+    if (!nameM) return null;
+    const tag = nameM[1].toLowerCase();
+    let pos = i + nameM[0].length;
+    // 遍历属性，跳过引号内的 >（避免箭头函数 =>、比较符 > 等提前截断标签）
+    while (pos < n) {
+      const c = source[pos];
+      if (c === '"' || c === "'") {
+        const quote = c;
+        pos++;
+        while (pos < n && source[pos] !== quote) pos++;
+        if (pos < n) pos++; // 跳过闭合引号
+      } else if (c === '>') {
+        const selfClose = pos > 0 && source[pos - 1] === '/';
+        return { tag, end: pos + 1, selfClose };
+      } else {
+        pos++;
+      }
+    }
+    return null;
   }
 
   function parseAttrs(attrsPart: string, basePos: number): RawHit[] {
